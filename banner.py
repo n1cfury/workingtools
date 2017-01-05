@@ -4,7 +4,7 @@ usage = "Usage: python banner.py <hostname>"
 
 def banner():
 	print "#####################################"
-	print "#   Banner Grabber  by: n1cfury     #"
+	print "# Python Banner Grabber:    n1cfury #"
 	print "#####################################"
 	print ""
 
