@@ -14,6 +14,7 @@ def banner():
     print "############   n1cFury- NetCat tool   #################"
     print "############  courtesy of Black Hat Python  ###########"
     print ""
+
 def usage():
     print "  USAGE: NetCat.py -t target_host -p port                    "
     print "-l   --Listen on [host]:[port] for incoming connections      "
