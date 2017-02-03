@@ -4,7 +4,7 @@ usage = "Usage: python banner.py <hostname>"
 
 def banner():
 	print "#####################################"
-	print "# Python Banner Grabber:    n1cfury #"
+	print "# Python Banner Grabber:  n1cfury   #"
 	print "#####################################"
 	print ""
 
@@ -23,7 +23,7 @@ def portscan(hostname,ports):
 def main():
 	if len(sys.argv) == 2:
 		hostname = sys.argv[1]
-		ports = [80]			#[21,80,443,8080,83]
+		ports = [80]			#[80,443,8080,83]
 		banner()
 		portscan(hostname,ports)
 	else:
