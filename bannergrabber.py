@@ -3,34 +3,33 @@
 import socket
 import sys
 
-usage = ("Usage: python bannergrabber.py <hostname>")
+usage = ("Usage: python bannergrabber.py <hostname> <port>")
 
-def banner():
+def logo():
 	print ("#"*25)
 	print ("#"+" "*9+"@n1c_Fury"+" "*9+"#")
 	print ("#"*25)
-	print usage()
 
-def Scan(hostname,ports)
+def scan(THOST, TPORT)
 	try:
-		for port in ports:
+		for port in TPORT:
 			s = socket.socket()
-			s.connect((hostname, port))
+			s.connect((THOST, port))
 			s.send("GET / HTTP/1.0\r\n\r\n")							
 			banner = s.recv(1024)
 			print "\n[+] Banner for port [+] " + str(port) + "\n" + " %s " %banner
-	except Exception, e:
-			print 'Error: %s' % e
-			print "\n"				
+	except Exception as e:
+			print ('Error: %s') % e
+			print ("")
 
 def main():
-	if len(sys.argv) == 2:
-		hostname = sys.argv[1]
-		ports = [80]			#[80,443,8080,83]
-		banner()
-		portscan(hostname,ports)
+	if len(sys.argv) == 3:
+		THOST = sys.argv[1]			#Specify host name
+		TPORT = sys.argv[2]			#Specify Port number
+		logo()
+	scan(THOST, TPORT)
 	else:
-		print usage
+		usage()
 
 if __name__ == "__main__":
   main()
