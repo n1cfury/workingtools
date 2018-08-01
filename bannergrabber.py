@@ -1,14 +1,17 @@
-import socket, sys
+#!/usr/bin/python
 
-usage = "Usage: python banner.py <hostname>"
+import socket
+import sys
+
+usage = ("Usage: python bannergrabber.py <hostname>")
 
 def banner():
-	print "#####################################"
-	print "# Python Banner Grabber:  n1cfury   #"
-	print "#####################################"
-	print ""
+	print ("#"*25)
+	print ("#"+" "*9+"@n1c_Fury"+" "*9+"#")
+	print ("#"*25)
+	print usage()
 
-def portscan(hostname,ports):
+def Scan(hostname,ports)
 	try:
 		for port in ports:
 			s = socket.socket()
