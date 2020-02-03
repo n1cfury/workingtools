@@ -2,10 +2,11 @@
 
 Any tools I was able to get working from other repositories have been moved here. Some of it works in Python2, some in Python3.  Updates are in progress.
 
-###bannergrabber.py
-This tool is a simple banner grabber.  
+### ./furiousrecon.sh
+This is my unaBASHedly mediocre attempt at making a bash script to automate some recon.
 
-Usage: ./bannergrabber.py **Host** **Port**
+### ./bannergrabber.py
+This tool is a simple banner grabber.  
 
 ### ./fuzzer.py
 This is a simple Fuzzer written in Python.  Your miles may vary.
