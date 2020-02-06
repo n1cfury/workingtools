@@ -1,9 +1,8 @@
-sudo apt-get update
-sudo apt-get upgrade
+Linux Install commands: Stuff you might need
 sudo apt-get python-pip
 python pip install paramiko
 
-apt-get install build-essential libreadline-dev libssl-dev libpq5 libpq-dev libreadline5 libsqlite3-dev libpcap-dev openjdk-7-jre git-core autoconf postgresql pgadmin3 curl zlib1g-dev libxml2-dev libxslt1-dev vncviewer libyaml-dev curl zlib1g-dev nmap wireshark aircrack-ng airmon-ng
+apt-get install terminator build-essential libreadline-dev libssl-dev libpq5 libpq-dev libreadline5 libsqlite3-dev libpcap-dev openjdk-7-jre git-core autoconf postgresql pgadmin3 curl zlib1g-dev libxml2-dev libxslt1-dev vncviewer libyaml-dev curl zlib1g-dev nmap wireshark aircrack-ng airmon-ng
 
 curl -L https://get.rvm.io | bash -s stable
 source ~/.rvm/scripts/rvm
@@ -13,6 +12,13 @@ rvm install 2.1.9
 rvm use 2.1.9 --default
 ruby -v
 
+Sublime Text
+sudo apt install apt-transport-https
+wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install sublime-text
+
+
 bundle install
 gem update
 
@@ -20,8 +26,6 @@ sudo -s
 su postgres
 createuser msf -P -S -R -D
 createdb -O msf msf
-exit
-exit
 
 cd /usr/share
 sudo git clone https://github.com/rapid7/metasploit-framework.git
